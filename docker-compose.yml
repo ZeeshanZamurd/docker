@@ -1,0 +1,38 @@
+version: '3'
+services:
+  api:
+    build: ./backend
+    ports:
+      - 3005:3005
+    volumes:
+      - ./backend/:/server/app
+
+  web:
+    build: ./frontend
+    ports:
+      - 3006:3006
+    volumes:
+      - ./frontend/:/server/app
+      
+  db:
+    image: postgres
+    ports:
+      - 5433:5432
+    volumes:
+      - ./.data/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+
+  pgadmin:
+    container_name: ${PGADMIN_CONTAINER_NAME}
+    image: ${PGADMIN_IMAGE}
+    restart: ${PGADMIN_RESTART}
+    volumes:
+      - ./.pgadmin/db:/data
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - ${PGADMIN_PORTS}
